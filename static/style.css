@@ -1,0 +1,54 @@
+.card {
+    /* margin-top: 2rem; */
+    background-color: rgb(44, 44, 115);
+    padding: 1rem;
+}
+
+.card input {
+    font-size: 1.2rem;
+}
+
+.card button {
+    margin-top: 1rem;
+    background-color: rgb(35, 35, 250);
+    color: white;
+}
+
+.card button:hover {
+    background-color: rgb(153, 171, 187);
+    transition: 0.8s;
+    color: black;
+}
+
+.topic {
+    margin-top: 1rem;
+}
+
+.topic h1 {
+    color: rgb(39, 39, 137);
+    font-size: 45px;
+    justify-content: center;
+}
+
+#error-login {
+    color: red;
+    margin-top: 1rem;
+}
+
+#login-container {
+    justify-content: center;
+    display: flex;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+}
+
+#content {
+    justify-content: center;
+}
+
+#map {
+    height: 70vh;
+}
