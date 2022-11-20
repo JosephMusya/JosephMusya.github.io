@@ -58,18 +58,7 @@
         }
 
         async function sensorData(sensors, device_ids) {
-            // Accepts the array and key
-            const groupBy = (array, key) => {
-                // Return the end result
-                return array.reduce((result, currentValue) => {
-                    // If an array already present for key, push it to the array. Else create an array and push the object
-                    (result[currentValue[key]] = result[currentValue[key]] || []).push(
-                        currentValue
-                    );
-                    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
-                    return result;
-                }, {}); // empty object is the initial value for result object
-            };
+            // Accepts the array and key            
 
             sensor_data = []
             var map = L.map('map').setView([-0.429, 36.930], 15.0);
@@ -81,6 +70,22 @@
             var marker = L.marker([-0.429, 36.930]).addTo(map);
 
             function addToMap(airData) {
+                const val = []
+                for (key in airData) {
+                    val.push(airData[key])
+                }
+
+                val.forEach(datapoint => {
+                    const lat = datapoint[0].value
+                    const long = datapoint[1].value
+                    const humidity = datapoint[2].value
+                    const temperature = datapoint[3].value
+
+                    console.log("Lat", lat, "Long", long, "Temperature", temperature, "Humidity ", humidity)
+                        // for (point in datapoint) {
+                        //     const temperature = datapoint[point][0]
+                        // }
+                })
                 var circle = L.circle([-0.429, 36.950], {
                     color: 'green',
                     fillColor: 'green',
@@ -193,6 +198,18 @@
                 sensors.splice(indexToRemove, 1);
             }
 
+            const groupBy = (array, key) => {
+                // Return the end result
+                return array.reduce((result, currentValue) => {
+                    // If an array already present for key, push it to the array. Else create an array and push the object
+                    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                        currentValue
+                    );
+                    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+                    return result;
+                }, {}); // empty object is the initial value for result object
+            };
+
             sensors.forEach(sensor_ => {
                 sensor_.forEach(sensor => {
                     device_ids.forEach(async device => {
@@ -202,12 +219,10 @@
                             sensor_data.push(val)
                         })
 
-
                         if (i == (device_ids.length * sensor_.length) - 1) {
                             const result = groupBy(sensor_data, "timestamp")
                             addToMap(result)
                         }
-
                         i++
                     })
                 })
