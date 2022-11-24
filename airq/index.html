@@ -40,6 +40,7 @@
         <div class="sensor-data"></div>
         <hr>
         <div id="map"></div>
+        <div id="dp"></div>
     </div>
 
     <script>
@@ -70,21 +71,26 @@
             var marker = L.marker([-0.429, 36.930]).addTo(map);
 
             function addToMap(airData) {
+                console.log(airData)
                 const val = []
                 for (key in airData) {
                     val.push(airData[key])
                 }
-
+                let dp = 0
                 val.forEach(datapoint => {
-                    const lat = datapoint[0].value
-                    const long = datapoint[1].value
-                    const humidity = datapoint[2].value
-                    const temperature = datapoint[3].value
-
-                    console.log("Lat", lat, "Long", long, "Temperature", temperature, "Humidity ", humidity)
+                    if (datapoint.length > 3) {
+                        const lat = datapoint[0].value
+                        const long = datapoint[1].value
+                        const humidity = datapoint[2].value
+                        const temperature = datapoint[3].value
+                        document.getElementById('dp').innerHTML = temperature + '---->' + key
+                        dp++
+                        // console.log(datapoint)
+                        // console.log("Lat", lat, "Long", long, "Temperature", temperature, "Humidity ", humidity)
                         // for (point in datapoint) {
                         //     const temperature = datapoint[point][0]
                         // }
+                    }
                 })
                 var circle = L.circle([-0.429, 36.950], {
                     color: 'green',
@@ -193,10 +199,10 @@
 
             i = 0
 
-            const indexToRemove = 0
-            if (indexToRemove > -1) {
-                sensors.splice(indexToRemove, 1);
-            }
+            // const indexToRemove = 0
+            // if (indexToRemove > -1) {
+            //     sensors.splice(indexToRemove, 1);
+            // }
 
             const groupBy = (array, key) => {
                 // Return the end result
@@ -213,7 +219,7 @@
             sensors.forEach(sensor_ => {
                 sensor_.forEach(sensor => {
                     device_ids.forEach(async device => {
-                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id)
+                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=1000000000')
                         let data = await res.json()
                         await data.forEach(val => {
                             sensor_data.push(val)
