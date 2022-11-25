@@ -40,7 +40,6 @@
         <div class="sensor-data"></div>
         <hr>
         <div id="map"></div>
-        <div id="dp"></div>
     </div>
 
     <script>
@@ -62,138 +61,49 @@
             // Accepts the array and key            
 
             sensor_data = []
-            var map = L.map('map').setView([-0.429, 36.930], 15.0);
+            var map = L.map('map').setView([-0.3951, 36.9642], 17.0);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
 
-            var marker = L.marker([-0.429, 36.930]).addTo(map);
+            var marker = L.marker([-0.3951, 36.9642]).addTo(map);
+
+            function AQI(coLevel) {
+                const aqi = coLevel
+                let color = 'green'
+                if (aqi <= 100) {
+                    color = 'green'
+                } else if ((aqi <= 180) && (aqi > 100)) {
+                    color = 'orange'
+                } else if (aqi > 180) {
+                    color = 'red'
+                }
+                console.log(color)
+                return color
+            }
 
             function addToMap(airData) {
-                console.log(airData)
                 const val = []
                 for (key in airData) {
                     val.push(airData[key])
                 }
-                let dp = 0
                 val.forEach(datapoint => {
-                    if (datapoint.length > 3) {
-                        const lat = datapoint[0].value
-                        const long = datapoint[1].value
-                        const humidity = datapoint[2].value
-                        const temperature = datapoint[3].value
-                        document.getElementById('dp').innerHTML = temperature + '---->' + key
-                        dp++
-                        // console.log(datapoint)
-                        // console.log("Lat", lat, "Long", long, "Temperature", temperature, "Humidity ", humidity)
-                        // for (point in datapoint) {
-                        //     const temperature = datapoint[point][0]
-                        // }
+                    if (datapoint.length == 2) {
+                        const co = datapoint[0].value
+                        const lat = datapoint[1].value['latitude']
+                        const lng = datapoint[1].value['longitude']
+                        console.log(lng)
+
+                        var circle = L.circle([lat, lng], {
+                            color: AQI(co),
+                            fillColor: AQI(co),
+                            fillOpacity: 0.5,
+                            radius: 6
+                        }).addTo(map);
                     }
                 })
-                var circle = L.circle([-0.429, 36.950], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-                var circle = L.circle([-0.42998, 36.9578], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
 
-                var circle = L.circle([-0.429781, 36.95211], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.429900, 36.95099], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.42999911, 36.9590676], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.4296811, 36.9500998], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.42909922, 36.9501234], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-
-                var circle = L.circle([-0.426, 36.940], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-                var circle = L.circle([-0.46998, 36.92568], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.4259781, 36.955211], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.42789900, 36.9512099], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.4210999911, 36.922590676], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.44286811, 36.99000998], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var circle = L.circle([-0.4298909922, 36.94301234], {
-                    color: 'green',
-                    fillColor: 'green',
-                    fillOpacity: 0.5,
-                    radius: 20
-                }).addTo(map);
-
-                var popup = L.popup()
-                    .setLatLng([-0.429, 36.930])
-                    .setContent("Gateway 1")
-                    // .closeButton(true)
-                    .openOn(map);
             }
 
 
