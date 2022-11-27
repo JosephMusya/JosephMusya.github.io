@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="container" id="login-container">
-        <div class="card">
+        <div class="card col-sm-12 col-md-6">
             <div class="mb-2 mt-2">
                 <input class="form-control" type="text" placeholder="username" id="username">
             </div>
@@ -45,7 +45,7 @@
                 <button class="btn bg-danger text-white" onclick="showCompany()">Sell</button>
                 <h5>Credits Available <span class="badge bg-danger fs-5">2.6T</span></h5>
                 <button class="btn bg-primary text-white" onclick="convert()">Convert</button>
-                <h5 class="badge fs-5 text-success" id="convert">Ksh: 4420</h5>
+                <h5 class="badge fs-5 text-success" id="convert">442 USD</h5>
                 <div></div>
                 <div></div>
                 <div></div>
@@ -114,46 +114,27 @@
             // Accepts the array and key            
 
             sensor_data = []
+            let weight = 0  
+            function getWeight(co){
+                console.log(co)
+                if (co <= 100){
+                    weight = 0
+                }
+                else if (co > 100 && co <= 200 ){
+                    weight = 0.1
+                }
+                else if (co >200){
+                    weight = 0
+                }
+                return weight
+            }
 
-            function initMap() {
+            function initMap(airData) {
                 // The location of Uluru
                 let heatMapData = [{
                         location: new google.maps.LatLng(37.782, -122.447),
                         weight: 0.5
                     },
-                    new google.maps.LatLng(37.782, -122.445), {
-                        location: new google.maps.LatLng(37.782, -122.443),
-                        weight: 2
-                    }, {
-                        location: new google.maps.LatLng(37.782, -122.441),
-                        weight: 3
-                    }, {
-                        location: new google.maps.LatLng(37.782, -122.439),
-                        weight: 2
-                    },
-                    new google.maps.LatLng(37.782, -122.437), {
-                        location: new google.maps.LatLng(37.782, -122.435),
-                        weight: 0.5
-                    },
-
-                    {
-                        location: new google.maps.LatLng(37.785, -122.447),
-                        weight: 3
-                    }, {
-                        location: new google.maps.LatLng(37.785, -122.445),
-                        weight: 2
-                    },
-                    new google.maps.LatLng(37.785, -122.443), {
-                        location: new google.maps.LatLng(37.785, -122.441),
-                        weight: 0.5
-                    },
-                    new google.maps.LatLng(37.785, -122.439), {
-                        location: new google.maps.LatLng(37.785, -122.437),
-                        weight: 2
-                    }, {
-                        location: new google.maps.LatLng(37.785, -122.435),
-                        weight: 3
-                    }
                 ];
 
                 const gateway = {
@@ -181,21 +162,44 @@
                 const info = new google.maps.InfoWindow({
                     content: "<h5>Gateway Location</h5>"
                 })
+                
+                    
+                const val = []
+                for (key in airData) {
+                    val.push(airData[key])
+                }
+                val.forEach(datapoint => {
+                    if (datapoint.length == 2) {
+                        const co = datapoint[0].value
+                        const lat = datapoint[1].value['latitude']
+                        const lng = datapoint[1].value['longitude']
+                        console.log(lng)
+                        var heatmap = new google.maps.visualization.HeatmapLayer({
+                            data: [{
+                                location: new google.maps.LatLng(lat, lng),
+                                weight: getWeight(co)
+                            }, ]
+                        });
+                        heatmap.setMap(map);
 
-                var heatmap = new google.maps.visualization.HeatmapLayer({
-                    data: [{
-                        location: new google.maps.LatLng(-0.3951, 36.9642),
-                        weight: 5
-                    }, ]
-                });
+                    }
+                })
+            
+                // var heatmap = new google.maps.visualization.HeatmapLayer({
+                //     data: [{
+                //         location: new google.maps.LatLng(-0.3951, 36.9642),
+                //         weight: 5
+                //     }, ]
+                // });
 
-                heatmap.setMap(map);
+                // heatmap.setMap(map);
 
                 info.open(map, marker)
             }
 
-            initMap()
             document.getElementById('major').hidden = false
+
+            
 
 
             // var map = L.map('map').setView([-0.3951, 36.9642], 17.0);
@@ -277,7 +281,7 @@
 
                         if (i == (device_ids.length * sensor_.length) - 1) {
                             const result = groupBy(sensor_data, "timestamp")
-                            addToMap(result)
+                            initMap(result)
                         }
                         i++
                     })
