@@ -106,7 +106,7 @@
                 let device = document.createElement('li')
                 device.setAttribute('class', i)
                 device.textContent = gateway[i].gateway_id
-                content.appendChild(device)
+                    // content.appendChild(device)
             }
         }
 
@@ -114,17 +114,16 @@
             // Accepts the array and key            
 
             sensor_data = []
-            let weight = 0  
-            function getWeight(co){
+            let weight = 0
+
+            function getWeight(co) {
                 console.log(co)
-                if (co <= 100){
-                    weight = 0
-                }
-                else if (co > 100 && co <= 200 ){
+                if (co <= 100) {
                     weight = 0.1
-                }
-                else if (co >200){
-                    weight = 0
+                } else if (co > 100 && co <= 200) {
+                    weight = 0.5
+                } else if (co > 200) {
+                    weight = 0.8
                 }
                 return weight
             }
@@ -132,16 +131,17 @@
             function initMap(airData) {
                 // The location of Uluru
                 let heatMapData = [{
-                        location: new google.maps.LatLng(37.782, -122.447),
-                        weight: 0.5
-                    },
-                ];
+                    location: new google.maps.LatLng(37.782, -122.447),
+                    weight: 0.5
+                }, ];
 
                 const gateway = {
                     // lat: 37.774546,
                     // lng: -122.433523
-                    lat: -0.3951,
-                    lng: 36.9642
+                    lat: -0.4817,
+                    lng: 37.1251,
+                    // lat: -0.3951,
+                    // lng: 36.9642
                 };
                 // The map, centered at Uluru
                 const map = new google.maps.Map(document.getElementById("map"), {
@@ -162,8 +162,8 @@
                 const info = new google.maps.InfoWindow({
                     content: "<h5>Gateway Location</h5>"
                 })
-                
-                    
+
+
                 const val = []
                 for (key in airData) {
                     val.push(airData[key])
@@ -173,7 +173,7 @@
                         const co = datapoint[0].value
                         const lat = datapoint[1].value['latitude']
                         const lng = datapoint[1].value['longitude']
-                        console.log(lng)
+                        console.log(lat, lng)
                         var heatmap = new google.maps.visualization.HeatmapLayer({
                             data: [{
                                 location: new google.maps.LatLng(lat, lng),
@@ -184,7 +184,7 @@
 
                     }
                 })
-            
+
                 // var heatmap = new google.maps.visualization.HeatmapLayer({
                 //     data: [{
                 //         location: new google.maps.LatLng(-0.3951, 36.9642),
@@ -199,7 +199,7 @@
 
             document.getElementById('major').hidden = false
 
-            
+
 
 
             // var map = L.map('map').setView([-0.3951, 36.9642], 17.0);
