@@ -9,10 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" href="assets/images/icon.png">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChOTRm6bv2jZKBeAIVMc2d7_peCJ5Sg94&libraries=visualization&callback=initMap"></script>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChOTRm6bv2jZKBeAIVMc2d7_peCJ5Sg94&callback=initMap"></script>
     <title>AirQ</title>
 </head>
 
@@ -40,10 +38,65 @@
         <div class="sensor-data"></div>
         <hr>
         <div id="map"></div>
+        <div class="container mt-1" id="major">
+            <hr>
+            <div class="d-flex gap-5">
+                <button class="btn bg-success text-white">Buy</button>
+                <button class="btn bg-danger text-white" onclick="showCompany()">Sell</button>
+                <h5>Credits Available <span class="badge bg-danger fs-5">2.6T</span></h5>
+                <button class="btn bg-primary text-white" onclick="convert()">Convert</button>
+                <h5 class="badge fs-5 text-success" id="convert">Ksh: 4420</h5>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="float-end">
+                    <h5 class="badge bg-danger">Alerts</h5>
+                    <span class="badge text-success fs-5">0</span>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex gap-3">
+                <div class="d-block" id="main">
+                    <h5 class="card-title" id="title">Available companies</h5>
+                    <hr>
+                    <li id="company1">Company 1</li>
+                    <li id="company2">Company 2</li>
+                    <li id="company3">Company 3</li>
+                </div>
+            </div>
+
+            <br>
+            <div>
+                <h5 class="title">Carbon Requests Market</h5>
+                <h5 class="badge bg-info fs-5">Request will appear here</h5>
+            </div>
+            <br><br><br>
+
+
+        </div>
     </div>
 
     <script>
         const url = 'https://api.waziup.io/api/v2';
+        document.getElementById('convert').hidden = true;
+        document.getElementById('company1').hidden = true;
+        document.getElementById('company2').hidden = true;
+        document.getElementById('company3').hidden = true;
+        document.getElementById('title').hidden = true;
+        document.getElementById('major').hidden = true
+
+        function showCompany() {
+            document.getElementById('company1').hidden = false;
+            document.getElementById('company2').hidden = false;
+            document.getElementById('company3').hidden = false;
+            document.getElementById('title').hidden = false;
+
+        }
+
+        function convert() {
+            document.getElementById('convert').hidden = false;
+        }
 
         function displayGateway(gateway) {
             // let gateway_devices = document.createElement('div')
@@ -64,23 +117,86 @@
 
             function initMap() {
                 // The location of Uluru
-                const dekut = {
+                let heatMapData = [{
+                        location: new google.maps.LatLng(37.782, -122.447),
+                        weight: 0.5
+                    },
+                    new google.maps.LatLng(37.782, -122.445), {
+                        location: new google.maps.LatLng(37.782, -122.443),
+                        weight: 2
+                    }, {
+                        location: new google.maps.LatLng(37.782, -122.441),
+                        weight: 3
+                    }, {
+                        location: new google.maps.LatLng(37.782, -122.439),
+                        weight: 2
+                    },
+                    new google.maps.LatLng(37.782, -122.437), {
+                        location: new google.maps.LatLng(37.782, -122.435),
+                        weight: 0.5
+                    },
+
+                    {
+                        location: new google.maps.LatLng(37.785, -122.447),
+                        weight: 3
+                    }, {
+                        location: new google.maps.LatLng(37.785, -122.445),
+                        weight: 2
+                    },
+                    new google.maps.LatLng(37.785, -122.443), {
+                        location: new google.maps.LatLng(37.785, -122.441),
+                        weight: 0.5
+                    },
+                    new google.maps.LatLng(37.785, -122.439), {
+                        location: new google.maps.LatLng(37.785, -122.437),
+                        weight: 2
+                    }, {
+                        location: new google.maps.LatLng(37.785, -122.435),
+                        weight: 3
+                    }
+                ];
+
+                const gateway = {
+                    // lat: 37.774546,
+                    // lng: -122.433523
                     lat: -0.3951,
                     lng: 36.9642
                 };
                 // The map, centered at Uluru
                 const map = new google.maps.Map(document.getElementById("map"), {
                     zoom: 15,
-                    center: dekut,
+                    center: gateway,
+                    mapTypeId: "satellite",
+
                 });
                 // The marker, positioned at Uluru
                 const marker = new google.maps.Marker({
-                    position: dekut,
+                    position: gateway,
                     map: map,
+                    // label: '',
+                    title: "Gateway",
+                    animation: google.maps.Animation.DROP,
                 });
+
+                const info = new google.maps.InfoWindow({
+                    content: "<h5>Gateway Location</h5>"
+                })
+
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: [{
+                        location: new google.maps.LatLng(-0.3951, 36.9642),
+                        weight: 5
+                    }, ]
+                });
+
+                heatmap.setMap(map);
+
+                info.open(map, marker)
             }
 
             initMap()
+            document.getElementById('major').hidden = false
+
 
             // var map = L.map('map').setView([-0.3951, 36.9642], 17.0);
             // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

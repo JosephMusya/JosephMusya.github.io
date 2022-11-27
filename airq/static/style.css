@@ -54,3 +54,11 @@
     height: 80vh;
     margin: auto;
 }
+
+#title {
+    font-weight: bold;
+}
+
+li {
+    font-size: 1.3rem;
+}
