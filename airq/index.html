@@ -117,7 +117,6 @@
             let weight = 0
 
             function getWeight(co) {
-                console.log(co)
                 if (co <= 100) {
                     weight = 0.1
                 } else if (co > 100 && co <= 200) {
@@ -173,7 +172,6 @@
                         const co = datapoint[0].value
                         const lat = datapoint[1].value['latitude']
                         const lng = datapoint[1].value['longitude']
-                        console.log(lat, lng)
                         var heatmap = new google.maps.visualization.HeatmapLayer({
                             data: [{
                                 location: new google.maps.LatLng(lat, lng),
