@@ -266,7 +266,7 @@
             sensors.forEach(sensor_ => {
                 sensor_.forEach(sensor => {
                     device_ids.forEach(async device => {
-                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=10000000000000000000000')
+                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=1000000')
                             // const res = await fetch(url + '/devices/' + device + '/sensors/' + sensor.id + '/values')
 
                         let data = await res.json()
