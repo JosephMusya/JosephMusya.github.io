@@ -167,31 +167,26 @@
                 for (key in airData) {
                     val.push(airData[key])
                 }
+                let heatpoints = []
                 val.forEach(datapoint => {
                     if (datapoint.length == 2) {
                         const co = datapoint[0].value
                         const lat = datapoint[1].value['latitude']
                         const lng = datapoint[1].value['longitude']
-                        var heatmap = new google.maps.visualization.HeatmapLayer({
-                            data: [{
+
+                        heatpoints.push(
+                            ...[{
                                 location: new google.maps.LatLng(lat, lng),
                                 weight: getWeight(co)
-                            }, ]
-                        });
-                        heatmap.setMap(map);
-
+                            }]
+                        )
                     }
                 })
 
-                // var heatmap = new google.maps.visualization.HeatmapLayer({
-                //     data: [{
-                //         location: new google.maps.LatLng(-0.3951, 36.9642),
-                //         weight: 5
-                //     }, ]
-                // });
-
-                // heatmap.setMap(map);
-
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatpoints
+                })
+                heatmap.setMap(map);
                 info.open(map, marker)
             }
 
@@ -271,7 +266,9 @@
             sensors.forEach(sensor_ => {
                 sensor_.forEach(sensor => {
                     device_ids.forEach(async device => {
-                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=1000')
+                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=10000000000000000000000')
+                            // const res = await fetch(url + '/devices/' + device + '/sensors/' + sensor.id + '/values')
+
                         let data = await res.json()
                         await data.forEach(val => {
                             sensor_data.push(val)
@@ -279,6 +276,7 @@
 
                         if (i == (device_ids.length * sensor_.length) - 1) {
                             const result = groupBy(sensor_data, "timestamp")
+                                // console.log(result)
                             initMap(result)
                         }
                         i++
@@ -330,6 +328,7 @@
             })
 
             const token = await res.text()
+            console.log(token)
             if (res.status != 200) {
                 document.getElementById('error-login').innerHTML = 'Invalid Credentials'
             } else if (res.status == '200') {
