@@ -1,0 +1,16 @@
+.airq-title,
+.tmm-title {
+    text-decoration: none;
+    font-size: 2rem;
+}
+
+.airq-title:hover,
+.tmm-title:hover {
+    color: white;
+    transition: 1.0s;
+}
+
+.desc:hover {
+    font-size: 1.2rem;
+    transition: 0.5s;
+}
