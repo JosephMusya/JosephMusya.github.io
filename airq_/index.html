@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" href="assets/images/icon.png">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChOTRm6bv2jZKBeAIVMc2d7_peCJ5Sg94&libraries=visualization&callback=initMap"></script>
+
+    <title>AirQ</title>
+</head>
+
+<body>
+    <div class="container container-topic">
+        <div class="container logo-container">
+            <img class="logo" src="assets/images/AirQ.png" alt="AirQ Logo">
+        </div>
+    </div>
+    <div class="container" id="login-container">
+        <div class="card col-sm-12 col-md-6">
+            <div class="mb-2 mt-2">
+                <input class="form-control" type="text" placeholder="username" id="username">
+            </div>
+            <div class="mt-3">
+                <input class="form-control" type="password" placeholder="password" id="password">
+            </div>
+            <button class="btn" id="login" onclick="authorize()">Log In</button>
+
+            <p id="error-login"></p>
+        </div>
+    </div>
+    <div class="container" id="content">
+        <div id="device-list"></div>
+        <div class="sensor-data"></div>
+        <hr>
+        <div id="map"></div>
+        <div class="container mt-1" id="major">
+            <hr>
+            <div class="d-flex gap-5">
+                <button class="btn bg-success text-white">Buy</button>
+                <button class="btn bg-danger text-white" onclick="showCompany()">Sell</button>
+                <h5>Credits Available <span class="badge bg-danger fs-5">2.6T</span></h5>
+                <button class="btn bg-primary text-white" onclick="convert()">Convert</button>
+                <h5 class="badge fs-5 text-success" id="convert">442 USD</h5>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="float-end">
+                    <h5 class="badge bg-danger">Alerts</h5>
+                    <span class="badge text-success fs-5">0</span>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex gap-3 col-sm-12 col-md-6">
+                <div class="d-block" id="main">
+                    <h5 class="card-title" id="title">Available companies</h5>
+                    <hr>
+                    <li id="company1">Company 1</li>
+                    <li id="company2">Company 2</li>
+                    <li id="company3">Company 3</li>
+                </div>
+            </div>
+
+            <br>
+            <div>
+                <h5 class="title">Carbon Requests Market</h5>
+                <h5 class="badge bg-info fs-5">Request will appear here</h5>
+            </div>
+            <br><br><br>
+
+
+        </div>
+    </div>
+
+    <script>
+        const url = 'https://api.waziup.io/api/v2';
+        document.getElementById('convert').hidden = true;
+        document.getElementById('company1').hidden = true;
+        document.getElementById('company2').hidden = true;
+        document.getElementById('company3').hidden = true;
+        document.getElementById('title').hidden = true;
+        document.getElementById('major').hidden = true
+
+        function showCompany() {
+            document.getElementById('company1').hidden = false;
+            document.getElementById('company2').hidden = false;
+            document.getElementById('company3').hidden = false;
+            document.getElementById('title').hidden = false;
+
+        }
+
+        function convert() {
+            document.getElementById('convert').hidden = false;
+        }
+
+        function displayGateway(gateway) {
+            // let gateway_devices = document.createElement('div')
+            // gateway_devices.setAttribute('id', 'gateways')
+            let content = document.getElementById('device-list')
+            for (let i = 0; i < gateway.length; i++) {
+                let device = document.createElement('li')
+                device.setAttribute('class', i)
+                device.textContent = gateway[i].gateway_id
+                    // content.appendChild(device)
+            }
+        }
+
+        async function sensorData(sensors, device_ids) {
+            // Accepts the array and key            
+
+            sensor_data = []
+            let weight = 0
+
+            function getWeight(co) {
+                if (co <= 100) {
+                    weight = 5
+                } else if (co > 100 && co <= 200) {
+                    weight = 0.5
+                } else if (co > 200) {
+                    weight = 0.8
+                }
+                return weight
+            }
+
+            function initMap(airData) {
+                // The location of Uluru
+                let heatMapData = [{
+                    location: new google.maps.LatLng(37.782, -122.447),
+                    weight: 0.5
+                }, ];
+
+                const gateway = {
+                    // lat: 37.774546,
+                    // lng: -122.433523
+                    lat: -0.392672,
+                    lng: 37.1374178,
+                    // lat: -0.3951,
+                    // lng: 36.13741
+                };
+                // The map, centered at Uluru
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 15,
+                    center: gateway,
+                    mapTypeId: "satellite",
+
+                });
+                // The marker, positioned at Uluru
+                const marker = new google.maps.Marker({
+                    position: gateway,
+                    map: map,
+                    // label: '',
+                    title: "Gateway",
+                    animation: google.maps.Animation.DROP,
+                });
+
+                const info = new google.maps.InfoWindow({
+                    content: "<h5>Gateway Location</h5>"
+                })
+
+                info.open(map, marker)
+
+                const val = []
+                for (key in airData) {
+                    val.push(airData[key])
+                }
+                let heatpoints = []
+                val.forEach(datapoint => {
+                    if (datapoint.length == 2) {
+                        const co = datapoint[0].value
+                        const lat = datapoint[1].value['latitude']
+                        const lng = datapoint[1].value['longitude']
+                        heatpoints.push(
+                            ...[{
+                                location: new google.maps.LatLng(lat, lng),
+                                weight: getWeight(co)
+                            }]
+                        )
+                        console.log(datapoint)
+                    }
+                })
+
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatpoints
+                })
+                heatmap.setMap(map);
+            }
+
+            document.getElementById('major').hidden = false
+
+
+
+
+            // var map = L.map('map').setView([-0.3951, 36.9642], 17.0);
+            // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //     maxZoom: 19,
+            //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            // }).addTo(map);
+
+            // var marker = L.marker([-0.3951, 36.9642]).addTo(map);
+
+
+
+
+            // function AQI(coLevel) {
+            //     const aqi = coLevel
+            //     let color = 'green'
+            //     if (aqi <= 100) {
+            //         color = 'green'
+            //     } else if ((aqi <= 180) && (aqi > 100)) {
+            //         color = 'orange'
+            //     } else if (aqi > 180) {
+            //         color = 'red'
+            //     }
+            //     console.log(color)
+            //     return color
+            // }
+
+            // function addToMap(airData) {
+            //     const val = []
+            //     for (key in airData) {
+            //         val.push(airData[key])
+            //     }
+            //     val.forEach(datapoint => {
+            //         if (datapoint.length == 2) {
+            //             const co = datapoint[0].value
+            //             const lat = datapoint[1].value['latitude']
+            //             const lng = datapoint[1].value['longitude']
+            //             console.log(lng)
+
+            //             var circle = L.circle([lat, lng], {
+            //                 color: AQI(co),
+            //                 fillColor: AQI(co),
+            //                 fillOpacity: 0.5,
+            //                 radius: 6
+            //             }).addTo(map);
+            //         }
+            //     })
+
+            // }
+
+
+            i = 0
+
+            // const indexToRemove = 0
+            // if (indexToRemove > -1) {
+            //     sensors.splice(indexToRemove, 1);
+            // }
+
+            const groupBy = (array, key) => {
+                // Return the end result
+                return array.reduce((result, currentValue) => {
+                    // If an array already present for key, push it to the array. Else create an array and push the object
+                    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                        currentValue
+                    );
+                    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+                    return result;
+                }, {}); // empty object is the initial value for result object
+            };
+
+            sensors.forEach(sensor_ => {
+                sensor_.forEach(sensor => {
+                    device_ids.forEach(async device => {
+                        const res = await fetch(url + '/sensors_data?device_id=' + device + '&' + 'sensor_id=' + sensor.id + '&limit=10000000000')
+                            // const res = await fetch(url + '/devices/' + device + '/sensors/' + sensor.id + '/values')
+
+                        let data = await res.json()
+                        await data.forEach(val => {
+                            sensor_data.push(val)
+                        })
+
+                        if (i == (device_ids.length * sensor_.length) - 1) {
+                            const result = groupBy(sensor_data, "timestamp")
+                                // console.log(result)
+                            initMap(result)
+                        }
+                        i++
+                    })
+                })
+            })
+        }
+
+        async function getData(username) {
+            const device_endpoint = '/devices'
+            const sensor_data_endpoint = 'sensor_data'
+            document.getElementById("login-container").hidden = true
+                // document.getElementById("welcome").innerHTML = "Welcome"
+            const devices = await fetch(url + device_endpoint + '?q=owner==' + username)
+            const gateway = await (devices.json())
+
+            const device_id = async(gateway) => {
+                let device_ids = []
+                let sensors_ = []
+                for (let i = 0; i < gateway.length; i++) {
+                    const id_d = gateway[i].id
+                    const sensor = gateway[i].sensors
+                    device_ids.push(id_d)
+                    sensors_.push(sensor)
+                }
+                await sensorData(sensors_, device_ids)
+            }
+
+            device_id(gateway)
+            displayGateway(gateway)
+
+        }
+
+        async function authorize() {
+            const endpoint = '/auth/token'
+            const username = document.getElementById('username').value
+            const password = document.getElementById('password').value
+
+            const res = await fetch(url + endpoint, {
+                method: 'post',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    'username': username,
+                    'password': password
+                })
+            })
+
+            const token = await res.text()
+            console.log(token)
+            if (res.status != 200) {
+                document.getElementById('error-login').innerHTML = 'Invalid Credentials'
+            } else if (res.status == '200') {
+                document.getElementById('error-login').innerHTML = ''
+                getData(username)
+
+            }
+            return token
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+
+</html>
