@@ -1,0 +1,99 @@
+:root {
+    --primary: rgb(11, 11, 34);
+    --secondary: rgb(37, 37, 56);
+    --text-color: white;
+    --extra: rgb(251, 178, 190);
+}
+
+.main {
+    background-color: var(--primary);
+    color: var(--text-color);
+}
+
+.content .badge {
+    font-size: 1.8rem;
+    border: 1px;
+    border-style: solid;
+    border-color: var(--extra);
+}
+
+body nav {
+    background-color: var(--secondary);
+    padding: 1rem;
+    margin-top: 0 !important;
+}
+
+nav .content {
+    width: 70vw;
+    display: flex !important;
+    text-decoration: none;
+    color: var(--text-color);
+    justify-content: space-between;
+}
+
+body a {
+    text-decoration: none;
+    color: var(--text-color)
+}
+
+body h1 {
+    font-size: 1.8rem;
+}
+
+.top h1:hover {
+    font-size: 1.9rem;
+    transition: 0.3s;
+}
+
+.top hr {
+    color: var(--extra);
+    height: 0.5rem !important;
+}
+
+body nav {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+}
+
+body .info {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.action {
+    display: flex;
+    justify-content: flex-start;
+    padding: 1rem;
+}
+
+body .top {
+    margin-top: 1rem;
+    background-color: var(--secondary);
+    padding: 1rem;
+}
+
+.history div h1 {
+    padding: 1rem;
+}
+
+body .history {
+    /* background-color: var(--secondary); */
+    border-radius: 1rem;
+    width: 75vw;
+    height: 95vh;
+}
+
+div canvas {
+    background-color: var(--secondary);
+    border-radius: 1rem;
+    padding: 1rem;
+    object-fit: cover;
+}
+
+.copy p {
+    opacity: 0.3;
+    display: flex;
+    justify-content: center;
+}
