@@ -10,42 +10,24 @@
     <link rel="icon" href="media/images/icon.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="scripts/routing.js"></script>
 
 
     <title>airq</title>
 </head>
 
 <body class="main">
-    <nav class="">
+    <nav>
         <div class="content">
             <h5 class=badge>Almasi Bottlers</h5>
-            <a href="#">logout</a>
+            <a href="/" onclick="route()">Dashboard</a>
+            <a href="/trade" onclick="route()">Trade</a>
+            <a href="/view-map" onclick="route()">View Map</a>
+            <a href="#" onclick="route()">logout</a>
         </div>
     </nav>
-    <div class="container info">
-        <div class="top card col-3">
-            <h1>Allocated</h1>
-            <hr>
-            <h2>700 CET</h2>
-        </div>
-        <div class="top card col-3">
-            <h1>Available</h1>
-            <hr>
-            <h2>170 CET</h2>
-        </div>
-        <div class="top card col-3">
-            <h1>Used</h1>
-            <hr>
-            <h2>530 CET</h2>
-        </div>
+    <div id="parent">
     </div>
-    <hr>
-    <div class="container history">
-        <div>
-            <h1>History- Carbon Consumption Rate</h1>
-            <canvas id="history-graph">                        
-                </div>
-            </div>       
     <hr>
     <div class="copy container">
         <p>AirQ&copy; Certified</p>
