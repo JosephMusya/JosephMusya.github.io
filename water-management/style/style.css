@@ -1,0 +1,132 @@
+:root {
+    --primary-color: rgb(25, 25, 57);
+    --secondary-color: rgb(57, 57, 78);
+    --text-color: white;
+}
+
+* {
+    color: var(--text-color);
+}
+
+body {
+    background-color: var(--secondary-color) !important;
+}
+
+nav {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 1rem;
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+nav div img {
+    height: 4rem;
+    width: 4rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+}
+
+nav h1 {
+    margin: 0.1rem 0 0.1rem 1rem;
+}
+
+.tank {
+    border-style: solid;
+    border-color: var(--text-color);
+    border-width: 0.15rem;
+    height: 25rem;
+    width: 25rem;
+    rotate: 180deg;
+    border-radius: 0 0 1rem 1rem;
+    overflow: hidden;
+}
+
+body .main {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.tank .water-level {
+    background-color: #35b3e7;
+    animation: fill 60s infinite linear;
+}
+
+.tank .wave {
+    display: flex;
+}
+
+.wave .box {
+    background-color: var(--secondary-color);
+    width: 4rem;
+    height: 4rem;
+    animation: wave 2.8s infinite linear;
+    border-radius: 45%;
+    position: inherit;
+    translate: 0 -0.7rem;
+}
+
+div .controls {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+div .controls button {
+    background-color: white;
+}
+
+@keyframes wave {
+    from {
+        transform: rotate(0deg);
+        /* translate: 0 -.4rem; */
+    }
+    to {
+        transform: rotate(360deg);
+        /* translate: 25rem -.4rem; */
+    }
+}
+
+@keyframes fill {
+    from {
+        background-color: #35b3e7;
+        height: 0rem;
+    }
+    to {
+        background-color: #35b3e7;
+        height: 25rem;
+    }
+}
+
+.main .setup h2 {
+    text-align: center;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.main .setup {
+    background-color: var(--secondary-color);
+    border: solid;
+    border-width: 0.15rem;
+    border-radius: 1rem;
+}
+
+.setup h2,
+h3 {
+    padding: 1rem;
+}
+
+form div {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 0.5rem;
+}
+
+form div input {
+    width: 150px !important;
+}
+
+.setup select {
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/bootstrap/css/bootstrap.min.css">
+    <title>waterManagement</title>
+</head>
+
+<body>
+    <nav>
+        <div><img src="media/images/logo.webp" alt="Waziup Logo"></div>
+        <h1>Waziup</h1>
+        <div class="project-title float-end">
+            <h1>Water Management</h1>
+        </div>
+    </nav>
+    <div class="main container col-sm-12">
+        <div class="col-sm-12 col-md-4">
+            <h2 class="">Tank Utilities</h2>
+            <div id="tank" class="tank col-12">
+                <div id="water-level" class="water-level"></div>
+                <div class="wave">
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                </div>
+            </div>
+            <hr>
+            <div class="controls">
+                <strong>Quantity:&nbsp;<span>30 Litres</span></strong>
+                <button class="btn">Pump</button>
+            </div>
+
+        </div>
+        <div class="card setup col-sm-12 col-md-4">
+            <h2>Tank Setup</h2>
+            <strong for="Tank-Type">Tank Type</strong>
+            <select class="form-control" name="Tank" id="tank-type">
+                <option value="Cylindrical">Cylindrical</option>
+                <option value="Cubic">Cubic</option>
+            </select>
+            <h3>Capacity</h3>
+            <form action="">
+                <div>
+                    <label for="max-level">Max Level</label>
+                    <input class="form-control" type="number" min="0" value="1000" disabled>
+                    <label for="max-level">Lts</label>
+                </div>
+                <div>
+                    <label for="max-level">Min Level</label>
+                    <input class="form-control" type="number" min="0" value="0" disabled>
+                    <label for="max-level">Lts</label>
+                </div>
+            </form>
+            <hr>
+            <h3>Triggers</h3>
+            <form action="">
+                <div>
+                    <label for="max-level">Max Level</label>
+                    <input class="form-control" type="number" min="0" value="900">
+                    <label for="max-level">Lts</label>
+                </div>
+                <div>
+                    <label for="max-level">Min Level</label>
+                    <input class="form-control" type="number" min="0" value="100">
+                    <label for="max-level">Lts</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="script/main.js"></script>
+    <script src="script/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
